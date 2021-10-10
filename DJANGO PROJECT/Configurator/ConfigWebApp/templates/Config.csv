@@ -1,0 +1,3 @@
+﻿Id,Language,Title,Price List,Currency,Logo1,Logo2,Logo3,Logo 1 PDF,Logo 2 PDF,Logo 3 PDF,Hide Languages Dropdown,Hide Discount Box,Hide PDF,Hide XLSX,Export Footer Text,Tax Code
+Viridian,en,Fusion Configurator,GBP-20-11.csv,GBP,ViridianLogo.svg,,ClearlineLogo.svg,ViridianLogo.png,,ClearlineLogo.png,,,,,,
+MarleyTest,en,Marley Test Configurator,marley-2021-01a.csv,GBP,marley.jpg,,,marley.jpg,,blank.jpg,yes,yes,,yes,Your Footer Text Goes Here,
