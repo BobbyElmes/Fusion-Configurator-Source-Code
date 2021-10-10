@@ -1,6 +1,6 @@
 ## THE FUSION CONFIGURATOR
 
-This is the Fusion Configurator. My first React App and first time using JavaScript, so inevitably some things are done slightly inneficiently. But it runs fine and works, so it's certainly a success. Still a work in progress but nearly completed this first draft.
+This is the Fusion Configurator. My first React App and first time using JavaScript, so inevitably some things are done slightly inneficiently. But it runs fine and works, so it's certainly a success.
 
 Link: https://www.fusionconfigurator.com/
 
