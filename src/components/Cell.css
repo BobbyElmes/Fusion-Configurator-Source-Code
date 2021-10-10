@@ -1,0 +1,481 @@
+.TC {
+    background: red !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0px !important;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.TR {
+    background: orange !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0px !important;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.TL {
+    background: yellow !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0 !important;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.T-LR {
+    background: linear-gradient(to right, yellow 50%, orange 50%);
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0 !important;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.button:focus,
+.button:active {
+    border-radius: 0px;
+    outline: 0;
+}
+
+.TY {
+    background-color: yellowgreen !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0px !important;
+    outline: 0 !important;
+    text-transform: uppercase;
+    font-size: 32%;
+}
+
+.CLB {
+    background: linear-gradient( 45deg, black, black 16.5px, yellow 10px, yellow 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    outline: 0 !important;
+    height: 25px;
+    width: 25px;
+}
+
+.CLB-S {
+    background: linear-gradient( 45deg, black, black 16.5px, grey 10px, grey 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    outline: 0 !important;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CRT {
+    background: linear-gradient( 45deg, #1074bc, #1074bc 16.5px, black 10px, black 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    outline: 0 !important;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+.CLT {
+    background: linear-gradient( 135deg, black, black 16.5px, #8bc63e 10px, #8bc63e 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+    outline: 0 !important;
+    height: 25px;
+    width: 25px;
+}
+
+.CRB {
+    background: linear-gradient( 135deg, #f7911d, #f7911d 16.5px, black 10px, black 20px ) !important;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    outline: 0 !important;
+    font-size: 32%;
+    height: 25px;
+    width: 25px;
+}
+
+
+.J {
+    background-color: deepskyblue !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    outline: 0 !important;
+    text-transform: uppercase;
+    font-size: 0%;
+}
+
+.VAT-16 {
+    background-color: grey !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    outline: 0 !important;
+    text-align: center;
+    font-size: 32%;
+}
+
+.SELECTED {
+    background-color: #2D436A !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    opacity: 1;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.Window {
+    background: url(".././Imgs/Window.png")no-repeat scroll 0 0 transparent;
+    background-size: 100% 100%;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    outline: 0 !important;
+    text-transform: uppercase;
+    font-size: 34px;
+    color: black !important;
+}
+
+.WindowAlternate {
+    background: url(".././Imgs/Window.png")no-repeat scroll 0 0 transparent;
+    background-size: 25px 25px;
+    width:25px !important;
+    height:25px !important;
+    padding:0;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    outline: 0 !important;
+    text-transform: uppercase;
+    color: black !important;
+}
+.Window2 {
+    background: rgba(242,135,181,1);
+    background-size: 100% 100%;
+    color: black !important;
+    border: 0.1px solid black;
+    outline: 0 !important;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    font-size: 34px;
+    color: black !important;
+}
+
+.Remove {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid darkred !important;
+    border-radius: 2px;
+    height: 30px;
+    margin-top: 8px;
+    text-align: center;
+    margin-left: 400px;
+    position: absolute;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: darkred;
+}
+    .Remove :hover,
+    .Remove :focus,
+    .Remove :active {
+        background-color: darkred !important;
+        background: darkred !important;
+        color: white;
+    }
+
+.btn-success:hover {
+    background-color: indianred !important;
+}
+
+.btn-success:focus,
+.btn-success:active {
+    background-color: white !important;
+    color: indianred !important;
+}
+
+.btn-Secondary:hover {
+    background-color: deepskyblue;
+    color: white !important;
+}
+
+.btn-danger:hover
+ {
+    background-color: mediumspringgreen !important;
+}
+.btn-danger:active,
+.btn-danger:focus {
+    background-color: white !important;
+    color: mediumspringgreen !important;
+}
+
+
+
+.Send {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid lightseagreen !important;
+    border-radius: 2px;
+    height: 30px;
+    text-align: center;
+    margin-top: 12px;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: lightseagreen;
+}
+    .Send :hover {
+        color: lightseagreen !important;
+    }
+
+.Download {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid dodgerblue !important;
+    border-radius: 2px;
+    height: 30px;
+    text-align: center;
+    margin-top: 12px;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: dodgerblue;
+}
+
+    .Download :hover {
+       
+    }
+
+.Corner {
+    background: rgba(0,0,0,0) !important;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    position: relative;
+    outline: 0 !important;
+    display: block;
+    overflow: hidden;
+    font-size: 75%;
+    z-index: 2;
+}
+
+
+.BigDiv {
+    color: black !important;
+    border: 0px solid black !important;
+    border-radius: 0.01px;
+    text-transform: uppercase;
+    text-align: center;
+    outline: 0 !important;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    font-size: 75%;
+    padding:-2px;
+    z-index:10;
+}
+
+.CornerDiv {
+    position: absolute;
+    bottom: 0;
+    border: 1px solid black;
+    border-radius: 0.1px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #8bc63e;
+    content: "";
+    z-index: 1;
+    transform: skew(-45deg);
+}
+.CornerDivBottomRight {
+    position: absolute;
+    bottom: 0;
+    border: 1px solid black;
+    border-radius: 0px;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    left: -120%;
+    background-color: #1074bc;
+    content: "";
+    z-index: 1;
+    transform: skew(45deg);
+}
+.CornerDivTopRight1 {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    right: -120%;
+    border: 1px solid black;
+    background-color: yellow;
+    content: "";
+    z-index: 1;
+    transform: skew(45deg);
+}
+
+.CornerDivTopRight2 {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    right: -120%;
+    border: 1px solid black;
+    background-color: grey;
+    content: "";
+    z-index: 1;
+    transform: skew(45deg);
+}
+
+.CornerDivTopLeft {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    left: -120%;
+    border: 1px solid black;
+    background-color: #f7911d;
+    content: "";
+    z-index: 1;
+    transform: skew(-45deg);
+}
+
+.PDFWindow {
+    background-color: #a5e0dd;
+    color: blueviolet !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 32%;
+}
+
+.PDFCorner {
+    background-color: #465298;
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 75%;
+}
+
+.button{
+    border-radius:0 !important;
+}
+.none {
+    background-color: rgba(0,0,0,0);
+    color: black !important;
+    border: 0.1px solid black;
+    border-radius: 0.1px;
+    outline: 0 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1px;
+}
+
+.btn-primary:hover {
+    color: white;
+    background-color: lightseagreen;
+    border-color: black; /*set the color you want here*/
+}
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: lightseagreen;
+}
+
+.Minus {
+    background-color: rgba(255, 0, 0, 0);
+    border: 2px solid darkred !important;
+    border-radius: 2px;
+    width: 25%;
+    height: 100px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: none !important;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: Arial;
+    color: darkred;
+}
+
+    .Minus :hover {
+        color: white;
+    }
+
+.Plus {
+    background: white;
+    background-color: white;
+    border: 2px solid lightseagreen !important;
+    border-radius: 2px;
+    width: 25%;
+    min-width:100px;
+    height: 100px;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: none !important;
+    font-size: 10px;
+    font-family: Arial;
+    color: lightseagreen;
+}
+.Plus :hover {
+    color: white !important;
+}
+
+.cancel{
+    cursor:pointer;
+    width:65px;
+    position:absolute;
+    top:2%;
+    right:1%;
+}
+
+.confirm {
+    cursor: pointer;
+    width: 65px;
+    position: absolute;
+    bottom: 2%;
+    right: 1%;
+}
+
+.clipboard {
+    width: 60px;
+    position: absolute;
+    top: 4%;
+    left: 1%;
+}
+
+   

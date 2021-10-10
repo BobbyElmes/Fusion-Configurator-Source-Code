@@ -1,0 +1,41 @@
+.TitleFont {
+    font-family: Segoe UI Light;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('.././Fonts/Roboto-Thin.ttf') format('truetype');
+}
+
+.TableEntry {
+    font-family: Arial;
+    font-size: 15px;
+}
+.TableHeader {
+    font-family: Segoe UI Light;
+    font-size: 15px;
+}
+
+.TableSmall {
+    font-family: Arial;
+    font-size:10px;
+}
+
+.Segoe {
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.Arial {
+    font-family: Arial, sans-serif;
+}
+
+.SegoeReg {
+    font-family: "Segoe", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+th {
+    font-weight: normal;
+    font-family: Arial;
+    font-size: 15px;
+    text-align:left;
+}

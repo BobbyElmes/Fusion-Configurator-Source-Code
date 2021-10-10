@@ -1,0 +1,310 @@
+.App {
+    
+}
+
+.AppMobile {
+    text-align: center;
+    overflow-x: hidden !important;
+}
+
+.outerDivCenter {
+    text-align: left;
+    padding-left: 10vw;
+
+    padding-right: 10%;
+    display: inline-block;
+}
+
+html {
+    
+}
+
+body {
+    
+}
+
+.Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 850px;
+    height: 30%;
+    min-width: 850px;
+    min-height: 300px;
+    right: auto;
+    background: white;
+    border: 2px solid black;
+    border-radius: 0;
+    outline: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.Overlay {
+    position: fixed;
+    z-index: 1000;
+    top: 0vh;
+    bottom: 0vh;
+    right: 0vw;
+    left: 0vw;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.ModalMobile {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    height: 50%;
+    right: auto;
+    background: white;
+    border: 2px solid black;
+    border-radius: 0;
+    outline: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.OverlayMobile {
+    position: fixed;
+    z-index: 1000;
+    top: 0vh;
+    bottom: 0vh;
+    right: 0vw;
+    left: 0vw;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.outerDivMobile {
+    text-align: center;
+    display: inline-block;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+}
+.WorkSpace {
+    background-color: #E6E7E9;
+    width: auto;
+    overflow-x: visible !important;
+    overflow-y: visible;
+}
+
+.WorkSpace2 {
+    background-color: white;
+    width: 100%;
+    overflow: hidden;
+    overflow-x: hidden !important;
+}
+
+.TableHeader {
+    background-color: #6C6D70;
+    margin-bottom: 0;
+    margin-top: 20px;
+}
+
+.TableUnder {
+    margin-bottom: 0;
+    margin-top: 2%;
+}
+
+.popUp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.VATClass {
+    font-size: 15px;
+    margin-left:650px;
+    margin-top: -10px;
+}
+
+.VATClassMobile {
+    font-size: 15px;
+    margin-top: -10px;
+}
+
+.projectNameClass {
+    font-family: Segoe UI Light;
+    font-size: 30px;
+    font: "30px Segoe UI Light";
+    background-color: #E6E7E9;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: 0px 0px 0px #E6E7E9;
+    outline: none;
+    padding-left: 8px;
+    min-width: 50px;
+}
+
+    .projectNameClass:focus,
+    .projectNameClass:hover {
+        background-color: white;
+    }
+
+
+.quoteNameClass {
+    font-family: Segoe UI Light;
+    font-size: 22px;
+    font: "30px Segoe UI Light";
+    background-color: white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    margin-left: -10px;
+    box-shadow: 0px 0px 0px #E6E7E9;
+    outline: none;
+    padding-left: 8px;
+    min-width: 50px;
+}
+
+    .quoteNameClass:focus,
+    .quoteNameClass:hover {
+        background-color: #f7f7f7;
+    }
+
+.quoteNameClass2 {
+    font-family: Segoe UI Light;
+    font-size: 22px;
+    font: "30px Segoe UI Light";
+    background-color: #E6E7E9;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    margin-left: -10px;
+    box-shadow: 0px 0px 0px #E6E7E9;
+    outline: none;
+    padding-left: 8px;
+    min-width: 50px;
+}
+
+    .quoteNameClass2:focus,
+    .quoteNameClass2:hover {
+        background-color: white;
+    }
+
+.projNamePopup {
+    font-family: Segoe UI Light;
+    font-size: 30px;
+    font: "30px Segoe UI Light";
+    background-color: white;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    margin: auto;
+    box-shadow: 0px 0px 0px #E6E7E9;
+    outline: none;
+    padding-left: 8px;
+    min-width: 50px;
+    max-width: 60%;
+}
+
+    .projNamePopup:focus,
+    .projNamePopup:hover {
+        background-color: #f7f7f7;
+    }
+
+.kitSection {
+    font-family: Segoe UI Light;
+    font-size: 30px;
+    font: "30px Segoe UI Light";
+}
+
+.kitSubHeader {
+    font-family: Arial;
+    font-size: 14px;
+    color: #1F1F1F;
+    margin-top: -12px;
+}
+
+.Loading {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 100vh;
+    text-align:center;
+}
+
+.Gif {
+    width: 200px;
+}
+
+.configError {
+    font-size:10px;
+    color:darkred;
+    z-index:100;
+    position:absolute;
+    top:20px;
+
+}
+
+.RollUpContainer{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    margin-left:0px;
+}
+
+.RollUp {
+    margin-right: 10px;
+    margin-top: 8px;
+    font-family: Arial;
+    font-size: 13px;
+}
+
+.RollUpOptions {
+    margin-bottom: 7px;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.RollUpMobile {
+    margin-right: 10px;
+    margin-top: 5px;
+    font-family: Segoe UI Light;
+    font-size: 18px;
+    font: "30px Segoe UI";
+}
+
+.RollUpOptionsMobile {
+    text-align:center;
+    margin-bottom: 7px;
+    font-family: "arial";
+    font-family: Segoe UI Light;
+    font-size: 18px;
+    font: "30px Segoe UI";
+}
+
+.RollUpContainerMobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+
+
+
