@@ -1,6 +1,6 @@
 ## THE FUSION CONFIGURATOR
 
-This is the Fusion Configurator. My first React App and first time using JavaScript, so inevitably some things are done slightly inneficiently. But it runs fine and works, so it's certainly a success. Still a work in progress but nearly completed this first draft.
+This is the Fusion Configurator. My first React App and first time using JavaScript, so inevitably some things are done slightly inneficiently. But it runs fine and works, so it's certainly a success.
 
 Link: https://www.fusionconfigurator.com/
 
@@ -8,7 +8,7 @@ Link: https://www.fusionconfigurator.com/
 
 Basically we've got the classic 'App.js' which sends data down to sub components and sub components of sub components etc etc. Therefore it's quite a large file, holds a fair few variables and does most of the actual data processing. 
 
-We've got the subcomponents in the /components/ directory and in the /Config/ directory we have the config file, used to set up custom versions of the configurator for different businesses/countries ect. In the /Functions/ directory we have some general purpose functions I created which are used across the project. One for formatting money and one for importing and parsing csv files. 
+The configuration of the website/websites: config files, prices, languages etc is done using a DJango, python backend as it was quick and easy to implement.
 
 ### Dependencies
 

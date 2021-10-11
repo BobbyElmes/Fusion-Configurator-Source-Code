@@ -541,7 +541,7 @@ class App extends React.Component {
 
         let check = true
 
-        // If surrounded by panels like so (were 2 = the window):
+        // If surrounded by panels like so (where 2 = the window):
 
         // [1][1][1]
         // [1][2][1]
@@ -558,7 +558,7 @@ class App extends React.Component {
             window = "VC"
         }
 
-        // If surrounded by panels like so (were 2 = the window):
+        // If surrounded by panels like so (where 2 = the window):
 
         // [1][1][1]
         // [1][2][1]
@@ -2120,7 +2120,7 @@ class App extends React.Component {
         }
 
 
-        //current currency in use (£100 or 1000kr for example)
+        //current currency in use (Â£100 or 1000kr for example)
         var currency = this.calculateCurrency()
 
         //if there is one or more quotes, quote information will be calculated and displayed
