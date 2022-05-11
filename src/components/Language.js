@@ -34,7 +34,7 @@ class Language extends React.Component {
                 if (this.props.mobile)
                     return (<select style={{ width: "110px", height: "32px", marginTop: "30px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
                 else
-                    return (<select style={{zIndex:100, width: "110px", marginLeft: "970px", marginTop: "-40px", textAlignLast: "center" }} onChange={this.handleChange}>  {options}</select>)
+                    return (<select className="LanguageDropdown" onChange={this.handleChange}>  {options}</select>)
             }
             else {
                 if (this.props.mobile)

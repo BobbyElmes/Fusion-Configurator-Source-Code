@@ -96,7 +96,7 @@ class KitSection extends React.Component {
             if (this.props.landscape)
                 g1Offset = 11
             else
-                g1Offset = 14
+                g1Offset = 13 //14
         }
 
         var flashID = 0
@@ -115,27 +115,22 @@ class KitSection extends React.Component {
                     corner.push(flash[i])
                     cornerID.push(ids[flashID][i + g1Offset])
                 }
-                else if (i < flash.length - 1 || land) {
+                else if (i < flash.length || land) { //else if (i < flash.length - 1 || land) {
                     vc.push(flash[i])
                     vcID.push(ids[flashID][i + g1Offset])
                 }
                 // a bit hacky but we want to smush TL/TR together into LRS here (only for PORTRAIT right now)
                 else {
-                    var tltr = Math.min(reg[0][1], reg[2][1]);
-                    reg.push([flash[i][0], flash[i][1], flash[i][2], flash[i][3]]);
-                    console.log(reg[reg.length - 1]);
-                    console.log(tltr);
-                    reg[reg.length - 1][1] += tltr;
-                    reg[0][1] -= tltr;
-                    reg[2][1] -= tltr;
+                  //  var tltr = Math.min(reg[0][1], reg[2][1]);
+                  //  reg.push([flash[i][0], flash[i][1], flash[i][2], flash[i][3]]);
+                  //  reg[reg.length - 1][1] += tltr;
+                  //  reg[0][1] -= tltr;
+                  //  reg[2][1] -= tltr;
 
                     regID.push(ids[flashID][i + g1Offset])
                 }
             }
         }
-        console.log(reg);
-        console.log(corner);
-        console.log(vc);
 
         //Do the same for the SPs and the SB16s
         var pack = this.props.packers 

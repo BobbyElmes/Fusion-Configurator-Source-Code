@@ -330,7 +330,7 @@ class PDFDownload extends React.Component {
             if (quotes[i].landscape)
                 numFlash = 1
 
-            var g1IdBoost = quotes[i].g1 ? quotes[i].landscape ? 11 : 13 : 0;
+            var g1IdBoost = quotes[i].g1 ? quotes[i].landscape ? 11 : 13 : 0; //14
             //flashing list
             for (var c = 0; c < quotes[i].flashingList.length; c++) {
                 if (quotes[i].flashingList[c][1] > 0) {
@@ -885,7 +885,7 @@ class PDFDownload extends React.Component {
         //Loop through quotes, then create a table in similar style to the full items table
         //Only difference being we're referencing the quotes and not the totals
         for (var i = 0; i < quotes.length; i++) {
-            var g1Offset = quotes[i].g1 ? quotes[i].landscape ? 11 : 14 : 0
+            var g1Offset = quotes[i].g1 ? quotes[i].landscape ? 11 : 13 : 0 //14
             tables.push([])
             var index = 0
             tables[i].push([[]])

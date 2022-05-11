@@ -279,6 +279,36 @@ body {
     font-size: 16px;
 }
 
+.Logo1Mobile {
+    object-fit: contain;
+    max-width: 35%;
+    max-height: 60px;
+    width: auto;
+    height: auto;
+    margin-left: 5%;
+    margin-top: 30px;
+    margin-right: auto;
+}
+
+.Logo1 {
+    object-fit: contain;
+    max-width: 250px;
+    max-height: 100px;
+    margin-left: 10%;
+    margin-top: 1%;
+    margin-bottom: -2%;
+}
+
+.LanguageDropdown {
+    z-index: 100;
+    width: 110px; 
+    position: absolute;
+    margin-left: 970px;
+    top:0;
+    margin-top: 20px; 
+    text-align-last: center;
+}
+
 .RollUpMobile {
     margin-right: 10px;
     margin-top: 5px;

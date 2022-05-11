@@ -8,9 +8,13 @@ class PackerDropDown extends React.Component {
         super(props)
         this.state = {
             widthId: 0,
-            widths: [25, 0, 22, 30, 35, 40, 45, 50]
+            widths: [25, 0, 22, 30, 35, 38, 40, 45, 50]
         }
         this.handleChange = this.handleChange.bind(this)
+
+        var startingThickness = this.props.startingThickness;
+        this.state.widths = this.state.widths.filter(item => item !== startingThickness);
+        this.state.widths.unshift(startingThickness);
     }
 
     handleChange(e) {
@@ -22,8 +26,8 @@ class PackerDropDown extends React.Component {
     }
 
     render() {
-        var widths = this.state.widths
         var options = []
+        var widths = this.state.widths
         for (var i = 0; i < widths.length; i++)
             options.push(<option style={{ direction: "rtl" }} value={i}>{widths[i]}</option>)
 

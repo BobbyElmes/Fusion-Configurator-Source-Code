@@ -83,7 +83,7 @@ class KitItem extends React.Component {
         }
 
         var comingSoon = "";
-        if (this.props.id == "F16-VC-G1" || this.props.id == "F16-VBC-G1") {
+        if (false) {
             if (!this.props.mobile)
                 comingSoon = <div>&#9888; {this.props.words[25][this.props.language]}</div>;
             else

@@ -27,6 +27,7 @@ import Language from './components/Language.js'
 import KitSection from './components/KitSection.js'
 import KWP from './components/KWP.js'
 import Camera from './components/Camera.js'
+import RollUp from './components/RollUp.js'
 import CSVLoader from './Functions/CSVLoader.js'
 import binarySearch from './Functions/BinarySearch.js'
 import getTextWidth from './Functions/TextWidth.js'
@@ -65,7 +66,7 @@ class App extends React.Component {
         super(props)
         //global variables
         this.state = {
-            //type of each cell in grid (0 = empty, 1 = solar, 2 = window)
+            //type of each cell in grid (empty, solar, window)
             type: [[]],
             //starting length of each grid row 
             xLen: 13,
@@ -73,7 +74,7 @@ class App extends React.Component {
             yLen: 8,
 
 
-            //array of string values for flashings in the grid
+            //value for flashing in grid
             flashing: [[]],
             //list of P/L flashings in use: id, count, price, description
             flashings: [[]],
@@ -99,6 +100,8 @@ class App extends React.Component {
             marked: [[]],
             warning:[],
 
+            //whether or not to display the velux windows box
+            displayWindow: true,
             //whether the window box is selected
             window: false,
             //whether the panel orientation is landscape or not (if not, it's portrait)
@@ -161,6 +164,8 @@ class App extends React.Component {
             logo2PDF: "",
             logo3PDF: "",
 
+            rollUpLeftRightsInWholeQuote: true,
+
             projectName: "Project Name",
 
             sessionId: "-1",
@@ -208,6 +213,8 @@ class App extends React.Component {
         this.pageLoadedPost = this.pageLoadedPost.bind(this)
         this.quoteAddedPost = this.quoteAddedPost.bind(this)
         this.initConfig = this.initConfig.bind(this)
+        this.rollUpLeftRightsPortrait = this.rollUpLeftRightsPortrait.bind(this)
+        this.rollUpChange = this.rollUpChange.bind(this)
     }
 
     async componentWillMount() {
@@ -299,6 +306,10 @@ class App extends React.Component {
         this.state.xlsxEnabled = values['hide-xlsx'] != "yes"
         this.state.exportFooterText = values['export-footer-text']
         this.state.taxCode = values['tax-code']
+        if (values['starting-batten-thickness'] != '') {
+            this.state.packerWidth = parseInt(values['starting-batten-thickness'])
+        }
+        this.state.displayWindow = values['hide-windows'] != "yes"
     }
 
     //initializes the values representing the grid
@@ -435,13 +446,37 @@ class App extends React.Component {
 
     //loads in the csv files and puts them into the relevent arrays
     async getProducts() {
+      /*  try {
+            var product = CSVLoader("https://www.fusionconfigurator.com/static/Test/Prices/" + this.state.priceList, 4, 3)
+            var ViridianProd = CSVLoader("https://www.fusionconfigurator.com/static/Test/Prices/ViridianUKPrices.csv", 4, 2)
+            var descriptions = CSVLoader("https://www.fusionconfigurator.com/static/Test/Languages/" + this.state.descriptionsFileName, 4, 5)
+            var words = CSVLoader("https://www.fusionconfigurator.com/static/Test/Languages/Languages.csv", 1, 4)
+        }
+        catch{
+            try {
+                var product = CSVLoader("https://www.crazymazy.co.uk/static/Prices/" + this.state.priceList, 4, 3)
+                var descriptions = CSVLoader("https://www.crazymazy.co.uk/static/Languages/" + this.state.descriptionsFileName, 4, 5)
+                var words = CSVLoader("https://www.crazymazy.co.uk/static/Languages/Languages.csv", 1, 4)
+            }
+            catch {
+                var csvRoute = require("./Products/" + this.state.priceList)
+                var product = CSVLoader(csvRoute, 4, 3)
+
+                var descriptions = CSVLoader(languages, 4, 5)
+                var words = CSVLoader(languages2, 1, 4)
+            }
+        }
+        
+        //this array has the portrait, landscape and finally packer flashing
+        //values & descriptions loaded into it
+        var productArr = [[], [], []]*/
 
         var data = new FormData();
         data.append("language", JSON.stringify(this.state.language))
         data.append("pricelist", JSON.stringify(this.state.priceList))
         data.append("description", JSON.stringify(this.state.descriptionsFileName))
 
-        var data = await fetch('https://www.fusionconfigurator.com/GetProductsAndDescriptionsTest/', {
+        var data = await fetch('https://www.fusionconfigurator.com/GetProductsAndDescriptions/', {
             method: 'POST',
             body: data
         })
@@ -462,9 +497,9 @@ class App extends React.Component {
             var descriptions = values['description']
 
             this.state.products = product;
-            this.state.flashings = products[0].slice(0, 14)
+            this.state.flashings = products[0].slice(0, 13)
             this.state.secondFlashings = products[1].slice(0, 11)
-            this.state.g1PortraitHolder = products[0].slice(14, products[0].length)
+            this.state.g1PortraitHolder = products[0].slice(13, products[0].length)
             this.state.g1LandscapeHolder = products[1].slice(11, products[1].length)
             this.state.panels = panels
             this.state.packers = products[2]
@@ -532,38 +567,30 @@ class App extends React.Component {
 
 
 
-    // Checks if you can place a velux window in the specific coordinates
-    // Returns null if not valid, or with the product code for the flashing required
+    //checks if you can place a velux window in the specific coordinates
+    //returns true if surrounded by panels (this might change in future)
     checkVeluxValid(temp, x, y) {
         var window = null
-        if (x == 0 || x >= this.state.yLen - 1 || y == 0 || y >= this.state.xLen - 1)
-            return false
+        if (x == 0 || y == 0 || y >= this.state.xLen - 1)
+            return null
 
         let check = true
 
-        // If surrounded by panels like so (where 2 = the window):
-
-        // [1][1][1]
-        // [1][2][1]
-        // [1][1][1]
-
-        // Then we need a VC flashing
-        for (var i = -1; i < 2; i++)
-            for (var c = -1; c < 2; c++)
-                if (temp[x + i][y + c] != 1 && !(i == 0 && c == 0))
-                    check = false
-
+        if (x < this.state.yLen - 1) {
+            for (var i = -1; i < 2; i++)
+                for (var c = -1; c < 2; c++)
+                    if (temp[x + i][y + c] != 1 && !(i == 0 && c == 0))
+                        check = false
+        }
+        else {
+            check = false
+        }
+        
         if (check == true)
         {
             window = "VC"
         }
 
-        // If surrounded by panels like so (where 2 = the window):
-
-        // [1][1][1]
-        // [1][2][1]
-
-        // Then we need a VB flashing
         if (window == null)
         {
             check = true;
@@ -575,7 +602,7 @@ class App extends React.Component {
             for (var c = -1; c < 2; c++)
                 if (temp[x + i][y + c] == 2)
                     check = false
-
+            
             if (check == true)
             {
                 window = "VB"
@@ -584,7 +611,7 @@ class App extends React.Component {
         return window
     }
 
-    // Checks if the current cell being hovered over can have a window placed
+    //checks if the current cell being hovered over can have a window placed
     windowCellValid(x, y) {
         if (this.state.window == true) {
             if (this.checkVeluxValid(this.state.type, x, y) != null)
@@ -595,12 +622,11 @@ class App extends React.Component {
     }
 
 
-    // Changes the cell type when clicked
-    // For example, from empty cell to a cell with a panel in
+    //changes the cell type when clicked
+    //for example, from empty cell to a cell with a panel in
     cellPress(y, x) {
         var temp = this.state.type
-
-        // If placing a velux window, otherwise
+        //if placing a velux window, otherwise
         if (this.state.window == true) {
             var window = this.checkVeluxValid(temp, x, y)
             if (temp[x][y] == 2) {
@@ -633,11 +659,11 @@ class App extends React.Component {
             })
             this.flashingLogic(x, y)
         }
-        // Calculate packers after doing the flashing logic
+        //calculate packers after doing the flashing logic
         this.calculatePackers()
     }
 
-    // Marks the cell on mouse down
+    //marks the cell on mouse down
     cellDown(y, x) {
         this.state.downCell = [x, y];
     }
@@ -863,6 +889,10 @@ class App extends React.Component {
         let landscape = this.state.landscape
         var packers = this.state.packers
         let flashing = this.state.flashings
+
+        if (width == 38) {
+            width = 35
+        }
        
         if (width > 25) {
 
@@ -920,13 +950,13 @@ class App extends React.Component {
         })
     }
 
-    // Removes/adds a flashing item from/to the total
+    //removes/adds a flashing item from/to the total
     changeFlash(x, flash) {
         var totalFlash = []
         var temp = ""
         var tempFlashing = this.state.flashings
-        // Sometimes we have more than one flashing in a cell,
-        // Handle it
+        //sometimes we have more than one flashing in a cell,
+        //handle it
         for (var i = 0; i < flash.length; i++) {
             if (flash[i] == ' ') {
                 totalFlash.push(temp)
@@ -937,8 +967,8 @@ class App extends React.Component {
         }
         totalFlash.push(temp)
 
-        // Loop through flashings and find the correct one, 
-        // Then add or remove 1 to the total
+        //loop through flashings and find the correct one, 
+        //then add or remove 1 to the total
         for (var i = 0; i < totalFlash.length; i++) {
             for (var c = 0; c < tempFlashing.length; c++) {
                 if (tempFlashing[c][0] == totalFlash[i]) {
@@ -996,7 +1026,7 @@ class App extends React.Component {
 
                         // If the cell we are looking at contains a panel
                         if (temp[1][1] == 1) {
-                            
+
                             var flashItem = "";
 
                             // If the cell to the left isnt empty (could be a TR, TC or a J)
@@ -1056,9 +1086,9 @@ class App extends React.Component {
                             this.changeFlash(1, flashItem)
                         }
 
-                         //If no panel in the cell we are calculating, check for corners (can have multiple corners for one location)
+                        //If no panel in the cell we are calculating, check for corners (can have multiple corners for one location)
                         else {
-                           
+
                             var corners = ""
 
                             // If the cell to the right isn't empty AND the cell below isnt empty AND the cell 1 below, 1 to the right isn't empty then we have a CLT
@@ -1110,7 +1140,7 @@ class App extends React.Component {
                         // Check if it's valid to have a velux 
                         var window = this.checkVeluxValid(tempType, x + i, y + c)
 
-                        if(window == "VC")
+                        if (window == "VC")
                             flashItem = flashList[11][0]
                         else if (window == "VB")
                             flashItem = flashList[12][0]
@@ -1134,24 +1164,27 @@ class App extends React.Component {
                         }
                     }
                 }
-                this.checkWarning(x+i, y+c)
+                this.checkWarning(x + i, y + c)
             }
         }
 
         this.checkWarningList()
-        
 
-        
         this.setState({
             flashing: tempFlash
         })
     }
 
-     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //                                                                                      CODE FOR WORKING OUT CELL WARNINGS 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
 
@@ -1493,6 +1526,7 @@ class App extends React.Component {
         var itemTotal = 0
 
         // Roll up the left and rights if it is per quote
+       // this.rollUpLeftRightsPortrait(flashTemp);
         for (var i = 0; i < flashTemp.length; i++) {
             flashCopy.push(new Array(4))
             flashCopy[i][0] = flashTemp[i][0]
@@ -1671,7 +1705,7 @@ class App extends React.Component {
         }
         else {
             if (newQuote.g1)
-                g1Extra = 14
+                g1Extra = 13
         }
 
        
@@ -1736,6 +1770,17 @@ class App extends React.Component {
             currentTotal[2][i][1] += Math.ceil(newQuote.packers[i][1])
         }
 
+     /*   if (this.state.rollUpLeftRightsInWholeQuote) {
+            if (newQuote.landscape == false) {
+                var min = Math.min(currentTotal[start][g1Extra][1], currentTotal[start][g1Extra + 2][1])
+
+                currentTotal[start][g1Extra][1] -= min;
+                currentTotal[start][g1Extra + 2][1] -= min;
+
+                currentTotal[start][newQuote.g1 ? (currentTotal[start].length - 1) : 13][1] += min;
+            }
+        }*/
+
         return currentTotal
     }
 
@@ -1799,7 +1844,7 @@ class App extends React.Component {
                 ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
 
-            if (!this.state.landscape) {
+         /*   if (!this.state.landscape) {
                 var tltr = Math.min(this.state.flashings[0][1], this.state.flashings[2][1]);
 
                 if (tltr > 0) {
@@ -1810,7 +1855,7 @@ class App extends React.Component {
                     ppwTotal -= tltr * (Math.round(((this.state.flashings[2][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100);
                     ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
                 }
-            }
+            } */
 
             return [ppwTotal, ppwPanels]
         }
@@ -1829,7 +1874,7 @@ class App extends React.Component {
                 ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
             }
 
-            if (!this.state.landscape) {
+         /*   if (!this.state.landscape) {
                 var tltr = Math.min(this.state.flashings[0][1], this.state.flashings[2][1]);
 
                 if (tltr > 0) {
@@ -1840,7 +1885,7 @@ class App extends React.Component {
                     ppwTotal -= tltr * (Math.round(((this.state.flashings[2][2] * (1 - (this.state.discount / 100))) + Number.EPSILON) * 100) / 100);
                     ppwTotal = (Math.round(((ppwTotal) + Number.EPSILON) * 100) / 100)
                 }
-            }
+            }*/
 
             return [ppwTotal, this.state.panels]
         }
@@ -2003,6 +2048,40 @@ class App extends React.Component {
         }
     }
 
+    rollUpLeftRightsPortrait(portraitFlashings) {
+        // Get the min of the TL, TRs
+        var numToRoll = Math.min(portraitFlashings[0][1], portraitFlashings[2][1]);
+
+        // Remove them from the TL, TRs
+        portraitFlashings[0][1] -= numToRoll;
+        portraitFlashings[2][1] -= numToRoll;
+
+        // Add them to the T-LR
+        portraitFlashings[portraitFlashings.length - 1][1] = numToRoll;
+    }
+
+    unrollLeftRightsPortrait(portraitFlashings) {
+        // Get the amount of combined boxes
+        var numToRoll = portraitFlashings[portraitFlashings.length - 1][1];
+
+        // Add them to the TL, TRs
+        portraitFlashings[0][1] += numToRoll;
+        portraitFlashings[2][1] += numToRoll;
+
+        // Set the T-LR back to 0
+        portraitFlashings[portraitFlashings.length - 1][1] = 0;
+    }
+
+    rollUpChange() {
+        var newRollUpVal = !this.state.rollUpLeftRightsInWholeQuote;
+
+        this.recalculateTotals();
+
+        this.setState({
+            rollUpLeftRightsInWholeQuote: newRollUpVal
+        })
+    }
+
     isValid(fname) {
         var rg1 = /^[^\\/:\*\?"<>\|]+$/; // forbidden characters \ / : * ? " < > |
         var rg2 = /^\./; // cannot start with dot (.)
@@ -2074,11 +2153,9 @@ class App extends React.Component {
         }*/
 
         if (mobile) {
-            if (isMobileSafari)
-                var topDis = "20px"
-            else
-                var topDis = "20px"
-            logo1 = <img style={{ width: "80px", height: "80px", marginLeft: "5%", marginTop: topDis, marginRight: "auto" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo1} />
+            var topDis = "20px"
+
+            logo1 = <img className="Logo1Mobile" src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo1} />
             logo2 = null
             if (this.state.logo2 != null) {
                 logo2 = <img style={{ width: "80px", height: "80px", marginLeft: "auto", marginRight: "5%", marginTop: topDis }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo2} />
@@ -2092,7 +2169,7 @@ class App extends React.Component {
 
         }
         else {
-            logo1 = <img style={{ width: "120px", marginLeft: "10%", marginTop: "1%", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo1} />
+            logo1 = <img className="Logo1" src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo1} />
             logo2 = null
             if (this.state.logo2 != null)
                 logo2 = <img style={{ width: "120px", marginLeft: "1%", marginTop: "1%", marginBottom: "-2%" }} src={"https://www.fusionconfigurator.com/static/Logos/" + this.state.logo2} />
@@ -2120,7 +2197,7 @@ class App extends React.Component {
         }
 
 
-        //current currency in use (Â£100 or 1000kr for example)
+        //current currency in use (£100 or 1000kr for example)
         var currency = this.calculateCurrency()
 
         //if there is one or more quotes, quote information will be calculated and displayed
@@ -2167,11 +2244,36 @@ class App extends React.Component {
                 }
             }
 
+           /* if (this.state.rollUpLeftRightsInWholeQuote) {
+                var totalLrsPerQuote = 0;
+                var totalLrG1sPerQuote = 0;
+                for (var i = 0; i < this.state.Quotes.length; i++) {
+                    if (this.state.Quotes.g1) {
+                        totalLrG1sPerQuote += this.state.Quotes[i].flashingList[this.state.Quotes[i].flashingList.length - 1][1];
+                    }
+                    else {
+                        totalLrsPerQuote += this.state.Quotes[i].flashingList[13][1];
+                    }
+                }
+
+                var LRS = summary[0][13][1] - totalLrsPerQuote;
+                var g1LRS = summary[0][summary[0].length - 1][1] - totalLrG1sPerQuote;
+                overallTotal += LRS * summary[0][13][2];
+                overallTotal += g1LRS * summary[0][summary[0].length - 1][2];
+
+                overallTotal -= LRS * (summary[0][0][2] + summary[0][2][2])
+                overallTotal -= g1LRS * (summary[0][14][2] + summary[0][16][2])
+            }*/
+
 
             pdf = <PDF mobile={mobile} wordList={this.state.words} lang={this.state.language} eur={this.state.currency} projectName={this.state.projectName} name={this.state.title} logo1={this.state.logo1PDF} logo2={this.state.logo2PDF} logo3={this.state.logo3PDF} ids={this.state.Ids} send={send} currency={currency} total={overallTotal} flashings={summary} discount={this.state.discount} panels={totalPanels} Quotes={this.state.Quotes} imgs={this.state.images} exportFooterText={this.state.exportFooterText} xlsxEnabled={this.state.xlsxEnabled} pdfEnabled={this.state.pdfEnabled} pdfLogoEveryPage={this.state.pdfLogoEveryPage} taxCode={this.state.taxCode} sessionId={ this.state.sessionId} />
             total.push(<DisplayQuote mobile={mobile} totalWord={this.state.words[6][this.state.language]} id={0} currency={currency} discount={this.state.discount} total={overallTotal} num={numQuotes} kwp={numKwp} eur={this.state.currency} />)
             total.push(<div style={{ background: "black", height: "1px", width: width, marginBottom: "20px", marginTop: "10px" }}></div>)
             total.push(<p className={mobile ? "VATClassMobile" : "VATClass"} style={{ fontFamily: mobile ? "Roboto" : "Segoe UI Light" }}>{replaceTaxCode(this.state.words[13][this.state.language], this.state.taxCode, this.state.language)}</p>)
+
+            var rollup = [];
+           // rollup.push(<RollUp rollUpWord={this.state.words[30][this.state.language]} options={[this.state.words[31][this.state.language], this.state.words[32][this.state.language]]} rollUpChange={this.rollUpChange} mobile={mobile} />);
+           // rollup.push(<div style={{ background: "black", height: "1px", width: width, marginBottom: "20px", marginTop: "10px" }}></div>);
         }
 
         //calculate price per watt & kWp 
@@ -2231,12 +2333,17 @@ class App extends React.Component {
             kitSection = <p className="kitSubHeader"><i>{this.state.words[27][this.state.language]}</i></p>
         }
 
+        var window = null;
+        if (this.state.displayWindow) {
+            window = <Window mobile={mobile} windWord={this.state.words[5][this.state.language]} window={this.state.window} press={this.windowPress} landscape={this.state.landscape} />
+        }
+
         // If not displaying the send form, display the configurator
         if (!mobile) {
             if (this.state.send == false) {
                 return (
                     <div className="app">
-                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize:"20px" }}>v1.3</p>
+                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize:"20px" }}>v1.4</p>
                         <div style={{ display: "flex", flexDirection: "row" }}>
                             {logo1}
                             {logo2}
@@ -2254,7 +2361,7 @@ class App extends React.Component {
                                     <div className="DropDown">
                                         <div style={{ display: "flex", flexDirection: "column" }}>
                                             <PanelDropDown panelWord={this.state.words[2][this.state.language]} ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
-                                            <PackerDropDown battenWord={this.state.words[3][this.state.language]} press={this.packerChange} />
+                                            <PackerDropDown battenWord={this.state.words[3][this.state.language]} press={this.packerChange} startingThickness={this.state.packerWidth} />
                                         </div>
                                     </div>
                                     {camera}
@@ -2266,8 +2373,8 @@ class App extends React.Component {
                                             <PricePerWatt currency={currency} panels={ppwPanels} total={ppwTotal} eur={this.state.currency} />
                                             <ArraySize outsideWord={this.state.words[4][this.state.language]} size={this.arraySize()} panel={this.state.panels[this.state.currentPanel]} landscape={this.state.landscape} />
                                         </div>
-                                        </div>
-                                            {grid}
+                                    </div>
+                                    {grid}
                                 </div>
                                 <p></p>
                                 <div className="horizontal">
@@ -2277,7 +2384,7 @@ class App extends React.Component {
                                     <AddQuote press={this.quotePopUp} total={ppwTotal} />
                                     <Clear press={this.clearPress} />
                                 </div>
-                                <Window windWord={this.state.words[5][this.state.language]} window={this.state.window} press={this.windowPress} landscape={this.state.landscape} />
+                                {window}
                             </div>
                         </div>
                         <div className="outerDivCenter" style={{ marginTop: "10px", marginBottom: "20px" }}>
@@ -2287,6 +2394,7 @@ class App extends React.Component {
                         <div className="WorkSpace" style={{ width: this.state.landscape ? (this.state.xLen > 21 ? window.innerWidth + 64 * (this.state.xLen - 21) : "100%") : this.state.xLen > 33 ? window.innerWidth + 40 * (this.state.xLen - 33) : "100%" }}>
                             <div className="outerDivCenter" style={{ marginTop: "20px", marginBottom: "10px" , overflowY: "visible"}}>
                                 {quotes}
+                                {rollup}
                                 {total}            
                                 <div id="divToPrint" style={{ overflowX: "hidden !important" }}>{pdf}
                                 </div>
@@ -2330,7 +2438,7 @@ class App extends React.Component {
             if (this.state.send == false) {
                 return (
                     <div className="AppMobile">
-                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize: "15px", zIndex:"1000" }}>v1.3</p>
+                        <p className="Segoe" style={{ position: "fixed", bottom: -15, right: 5, opacity: "50%", fontSize: "15px", zIndex:"1000" }}>v1.4</p>
                         {logos}
                         <div style={{ background: "#E6E7E9", height: "5px", width: width, marginBottom: "50px", marginTop: "0px" }}></div>
                         <div className="outerDivMobile" style={{ width: "90%"}}>
@@ -2344,7 +2452,7 @@ class App extends React.Component {
                                     <div className="DropDown">
                                         <div style={{ display: "flex", flexDirection: "column",marginRight:"5px",width:mobilePacker }}>
                                             <PanelDropDown mobile={true} panelWord={this.state.words[2][this.state.language]} ids={this.state.Ids[3]} press={this.panelChange} panels={this.state.panels} />
-                                            <PackerDropDown mobile={true} width={mobilePacker} battenWord={this.state.words[3][this.state.language]} press={this.packerChange} />
+                                            <PackerDropDown mobile={true} width={mobilePacker} battenWord={this.state.words[3][this.state.language]} press={this.packerChange} startingThickness={this.state.packerWidth} />
                                         </div>
                                     </div>
                                 </div>
@@ -2362,7 +2470,7 @@ class App extends React.Component {
                                     <AddQuote mobile={true} press={this.quotePopUp} total={ppwTotal} />
                                     <Clear mobile={true} press={this.clearPress} />
                                 </div>
-                                <Window mobile={true} windWord={this.state.words[5][this.state.language]} window={this.state.window} press={this.windowPress} landscape={this.state.landscape} />
+                                {window}
                             </div>
                         </div>
                         <div className="outerDivMobile" style={{ marginTop: "20px", marginBottom: "20px",display:"inline-block" }}>
@@ -2371,7 +2479,9 @@ class App extends React.Component {
                         </div>
                         <div className="WorkSpace">
                             <div className="outerDivMobile" style={{ marginTop: "20px", marginBottom: "10px" }}>
+                                
                                 {quotes}
+                                {rollup}
                                 {total}
                                 <div id="divToPrint" style={{ overflowX: "hidden !important" }}>{pdf}
                                 </div>
