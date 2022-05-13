@@ -278,12 +278,8 @@ class App extends React.Component {
         let params = new URLSearchParams(search);
         let id = params.get('id');
 
-        var data = new FormData();
-        data.append("id", JSON.stringify(id))
-
-        var data = await fetch('https://www.fusionconfigurator.com/GetConfig/', {
-            method: 'POST',
-            body: data
+        var data = await fetch('https://www.fusionconfigurator.com/GetConfig/?id=' + id, {
+            method: 'GET'
         })
         var values = await data.json()
 
@@ -471,14 +467,8 @@ class App extends React.Component {
         //values & descriptions loaded into it
         var productArr = [[], [], []]*/
 
-        var data = new FormData();
-        data.append("language", JSON.stringify(this.state.language))
-        data.append("pricelist", JSON.stringify(this.state.priceList))
-        data.append("description", JSON.stringify(this.state.descriptionsFileName))
-
-        var data = await fetch('https://www.fusionconfigurator.com/GetProductsAndDescriptions/', {
-            method: 'POST',
-            body: data
+        var data = await fetch('https://www.fusionconfigurator.com/GetProductsAndDescriptions/?language=' + this.state.language + '&pricelist=' + this.state.priceList + '&description=' + this.state.descriptionsFileName, {
+            method: 'GET'
         })
         var values = await data.json()
 

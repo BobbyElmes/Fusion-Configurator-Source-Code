@@ -16,7 +16,7 @@ import math
 
 
 
-# This all used to be part of the front end in js so it's messy
+# Create your views here.
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def configurator(request):
@@ -220,12 +220,21 @@ def GetAccessData(request):
 
 @csrf_exempt
 def GetConifg(request):
-    if request.method == 'POST':
-        queryId = request.POST['id'].replace('"', '')
+    if request.method == 'GET':
+        queryId = request.GET['id'].replace('"', '')
         config = CsvReader('static/Config/Config.csv')
         row = GetConfigSettings(config, queryId)
 
-        return JsonResponse({'language':row[1], 'title':row[2], 'descriptions':row[3], 'price-list':row[4], 'currency':row[5], 'logo1': row[6], 'logo2': row[7], 'logo3':row[8], 'logo1-pdf':row[9], 'logo2-pdf':row[10], 'logo3-pdf':row[11], 'hide-languages-dropdown':row[12], 'hide-discount-box':row[13], 'hide-pdf': row[14], 'hide-xlsx': row[15], 'export-footer-text': row[16], 'tax-code': row[17]})
+        return JsonResponse({'language':row[1], 'title':row[2], 'descriptions':row[3], 'price-list':row[4], 'currency':row[5], 'logo1': row[6], 'logo2': row[7], 'logo3':row[8], 'logo1-pdf':row[9], 'logo2-pdf':row[10], 'logo3-pdf':row[11], 'hide-languages-dropdown':row[12], 'hide-discount-box':row[13], 'hide-pdf': row[14], 'hide-xlsx': row[15], 'export-footer-text': row[16], 'tax-code': row[17], 'starting-batten-thickness': row[18], 'hide-windows': row[19]})
+
+@csrf_exempt
+def GetConifg_Test(request):
+    if request.method == 'GET':
+        queryId = request.GET['id'].replace('"', '')
+        config = CsvReader('static/Test/Config/Config.csv')
+        row = GetConfigSettings(config, queryId)
+
+        return JsonResponse({'language':row[1], 'title':row[2], 'descriptions':row[3], 'price-list':row[4], 'currency':row[5], 'logo1': row[6], 'logo2': row[7], 'logo3':row[8], 'logo1-pdf':row[9], 'logo2-pdf':row[10], 'logo3-pdf':row[11], 'hide-languages-dropdown':row[12], 'hide-discount-box':row[13], 'hide-pdf': row[14], 'hide-xlsx': row[15], 'export-footer-text': row[16], 'tax-code': row[17], 'starting-batten-thickness': row[18], 'hide-windows': row[19]})
 
 
 def CsvReader(path):
@@ -271,74 +280,74 @@ def GetProductsAndDescriptions(request):
     #this array has the portrait, landscape and finally packer flashing
     #values & descriptions loaded into it
 
+    if request.method == 'GET':
+        language = int(request.GET['language'].replace('"', ''))
+        pricelistFilename = request.GET['pricelist'].replace('"', '')
+        descriptionFilename =  request.GET['description'].replace('"', '')
 
-    language = int(request.POST['language'].replace('"', ''))
-    pricelistFilename = request.POST['pricelist'].replace('"', '')
-    descriptionFilename =  request.POST['description'].replace('"', '')
+        fileCount = 0
+        error = ""
+        try:
+            product = CSVLoader("static/Prices/" + pricelistFilename, 4)
+            fileCount += 1
+            descriptions = CSVLoader("static/Languages/" + descriptionFilename, 4)
+            words = CSVLoader("static/Languages/Languages.csv", 1)
+        except:
+            if (fileCount == 0):
+                error = "Invalid price list filename: '" + pricelistFilename + "' in the config."
+            else:
+                error = "Invalid description filename: '" + descriptionFilename + "' in the config"
+            return JsonResponse({'error':error})
 
-    fileCount = 0
-    error = ""
-    try:
-        product = CSVLoader("static/Prices/" + pricelistFilename, 4)
-        fileCount += 1
-        descriptions = CSVLoader("static/Languages/" + descriptionFilename, 4)
-        words = CSVLoader("static/Languages/Languages.csv", 1)
-    except:
-        if (fileCount == 0):
-            error = "Invalid price list filename: '" + pricelistFilename + "' in the config."
-        else:
-            error = "Invalid description filename: '" + descriptionFilename + "' in the config"
-        return JsonResponse({'error':error})
+        productArr = [[], [], []]
+        ids = []
+        #first we sort our descriptions (character by character) by the ID column in order to allow for
+        #binary search
+        #sortedDesc.sort()
+        sorted(descriptions,key=lambda l:l[0])
+        for i in range(0, len(descriptions)):
+            descriptions[i].sort()
 
-    productArr = [[], [], []]
-    ids = []
-    #first we sort our descriptions (character by character) by the ID column in order to allow for
-    #binary search
-    #sortedDesc.sort()
-    sorted(descriptions,key=lambda l:l[0])
-    for i in range(0, len(descriptions)):
-        descriptions[i].sort()
+        #now we create an array with only the sorted IDs
+        #after this, we can binary search the sorted descriptions with the viridian IDs
+        #present in the product file, in order to enable different panels and stuff to be
+        #present in different versions of the configurator
+        sortedColumn = []
+        for i in range (0, len(descriptions)):
+            currentCol = []
+            for c in range (0, len(descriptions[i])):
+                currentCol.append(descriptions[i][c][0])
+            sortedColumn.append(currentCol)
 
-    #now we create an array with only the sorted IDs
-    #after this, we can binary search the sorted descriptions with the viridian IDs
-    #present in the product file, in order to enable different panels and stuff to be
-    #present in different versions of the configurator
-    sortedColumn = []
-    for i in range (0, len(descriptions)):
-        currentCol = []
-        for c in range (0, len(descriptions[i])):
-            currentCol.append(descriptions[i][c][0])
-        sortedColumn.append(currentCol)
+        for c in range(0,3):
+            ids.append([0 for i in range (len(product[c]))])
+            for i in range(0, len(product[c])):
+                if (len(product[c][i][0]) == 0):
+                    break;
+                productArr[c].append([0,0,0,0])
+                productArr[c][i][0] = product[c][i][2]
+                ids[c][i] = product[c][i][0]
+                productArr[c][i][1] = 0
+                productArr[c][i][2] = float(product[c][i][1])
+                productArr[c][i][3] = descriptions[c][BinarySearch(sortedColumn[c], product[c][i][2], 0, len(sortedColumn[c]) - 1)][language + 1]
 
-    for c in range(0,3):
-        ids.append([0 for i in range (len(product[c]))])
-        for i in range(0, len(product[c])):
-            if (len(product[c][i][0]) == 0):
+        #now to load the panel values
+        panelArr = []
+        ids.append([0 for i in range (len(product[3]))])
+        for i in range (0, len(product[3])):
+            if (product[3][i][0] == ""):
                 break;
-            productArr[c].append([0,0,0,0])
-            productArr[c][i][0] = product[c][i][2]
-            ids[c][i] = product[c][i][0]
-            productArr[c][i][1] = 0
-            productArr[c][i][2] = float(product[c][i][1])
-            productArr[c][i][3] = descriptions[c][BinarySearch(sortedColumn[c], product[c][i][2], 0, len(sortedColumn[c]) - 1)][language + 1]
+            panelArr.append([0,0,0,0,0,0,0])
+            panelArr[i][0] = product[3][i][5]
+            ids[3][i] = product[3][i][0]
+            panelArr[i][1] = 0
+            panelArr[i][2] = float(product[3][i][2])
+            panelArr[i][3] = float(product[3][i][1])
+            panelArr[i][4] = descriptions[3][BinarySearch(sortedColumn[3], product[3][i][5], 0, len(sortedColumn[3])- 1)][language + 1]
+            panelArr[i][5] = float(product[3][i][3])
+            panelArr[i][6] = float(product[3][i][4])
 
-    #now to load the panel values
-    panelArr = []
-    ids.append([0 for i in range (len(product[3]))])
-    for i in range (0, len(product[3])):
-        if (product[3][i][0] == ""):
-            break;
-        panelArr.append([0,0,0,0,0,0,0])
-        panelArr[i][0] = product[3][i][5]
-        ids[3][i] = product[3][i][0]
-        panelArr[i][1] = 0
-        panelArr[i][2] = float(product[3][i][2])
-        panelArr[i][3] = float(product[3][i][1])
-        panelArr[i][4] = descriptions[3][BinarySearch(sortedColumn[3], product[3][i][5], 0, len(sortedColumn[3])- 1)][language + 1]
-        panelArr[i][5] = float(product[3][i][3])
-        panelArr[i][6] = float(product[3][i][4])
-
-    return JsonResponse({'ids':ids, 'products':productArr, 'panels':panelArr, 'product': product, 'description':descriptions, 'words':words, 'error':error})
+        return JsonResponse({'ids':ids, 'products':productArr, 'panels':panelArr, 'product': product, 'description':descriptions, 'words':words, 'error':error})
 
 def BinarySearch(arr, x, start, end):
     # Base Condition
@@ -369,9 +378,9 @@ def GetProductsAndDescriptionsTest(request):
     #values & descriptions loaded into it
 
 
-    language = int(request.POST['language'].replace('"', ''))
-    pricelistFilename = request.POST['pricelist'].replace('"', '')
-    descriptionFilename =  request.POST['description'].replace('"', '')
+    language = int(request.GET['language'].replace('"', ''))
+    pricelistFilename = request.GET['pricelist'].replace('"', '')
+    descriptionFilename =  request.GET['description'].replace('"', '')
 
     fileCount = 0
     error = ""
